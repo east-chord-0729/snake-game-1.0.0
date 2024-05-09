@@ -6,3 +6,6 @@ a.cpp
 *.o
 run
 a.out
+*.log
+JC
+DH
