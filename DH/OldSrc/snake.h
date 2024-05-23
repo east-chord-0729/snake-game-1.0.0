@@ -4,6 +4,7 @@
 #include <queue>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 #define BOARD_DIM 17
 #define BOARD_ROWS BOARD_DIM

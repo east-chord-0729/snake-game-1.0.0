@@ -7,6 +7,8 @@ SnakePiece::SnakePiece(int y, int x) // SnakePiece 클래스의 생성자 정의
     this->icon = '#'; // 뱀 조각의 아이콘을 설정합니다.
 }
 
+//*********
+
 Snake::Snake() // Snake 클래스의 생성자 정의
 {
     currDirection = DOWN; // 초기 뱀의 방향을 아래쪽으로 설정합니다.

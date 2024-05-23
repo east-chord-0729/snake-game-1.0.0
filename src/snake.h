@@ -39,18 +39,18 @@ class Board
     void construct(int height, int width);
 
   public:
-    Board();
-    Board(int height, int width);
-    void initialize();
-    void addBorder();
-    void add(Drawable drawable);
-    void addAt(int y, int x, chtype ch);
-    chtype getInput();
-    chtype getCharAt(int y, int x);
-    void getEmptyCoordinates(int &y, int &x);
-    void clear();
-    void refresh();
-    void setTimeout(int timeout);
+    Board();                                  //
+    Board(int height, int width);             //
+    void initialize();                        // 중요
+    void addBorder();                         //
+    void add(Drawable drawable);              // 이게 중요.
+    void addAt(int y, int x, chtype ch);      // 사실 안씀.
+    chtype getInput();                        //
+    chtype getCharAt(int y, int x);           // 중요
+    void getEmptyCoordinates(int &y, int &x); // 동현만 중요할지도
+    void clear();                             //
+    void refresh();                           //
+    void setTimeout(int timeout);             //
 };
 
 class Apple : public Drawable
@@ -71,10 +71,14 @@ class SnakePiece : public Drawable
     SnakePiece(int y = 0, int x = 0);
 };
 
+class Wall : public Drawable
+{
+};
+
 class Snake
 {
   private:
-    std::queue<SnakePiece> prevPieces;
+    std::queue<SnakePiece> prevPieces; // SnakePiece[] pieces;
     Direction currDirection;
 
   public:
@@ -108,3 +112,17 @@ class SnakeGame
     void redraw();
     bool isOver();
 };
+
+/*
+
+  상속은 is 관계
+
+  정사각형은 도형이다.
+  원은 도형이지.
+  삼각형도 도형이야.
+
+  정사각형 원 삼각형 --상속-- 도형
+
+  스네이크전체는 스네이크부분인가? 아님 이건 have
+
+*/

@@ -88,6 +88,7 @@ bool SnakeGame::isOver() // 게임 종료 여부 확인 함수 정의
     return gameOver; // 게임 종료 상태를 반환합니다.
 }
 
+// TODO 개같이 구현함
 void SnakeGame::handleNextPiece(SnakePiece next) // 다음 위치 처리 함수 정의
 {
     // 다음 위치에 사과가 없으면

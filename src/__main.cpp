@@ -7,6 +7,7 @@ int main() // main 함수 시작
     noecho(); // 사용자 입력에 대한 에코를 해제합니다. 사용자 입력이 화면에 표시되지 않습니다.
     curs_set(0); // 커서를 화면에서 보이지 않도록 설정합니다.
 
+    //* Game Cotroller 
     SnakeGame game(BOARD_ROWS, BOARD_COLS); // Snake 게임 객체를 생성합니다. 게임 보드의 행과 열을 인수로 전달합니다.
 
     while (!game.isOver()) // 게임이 종료되지 않은 동안 반복합니다.

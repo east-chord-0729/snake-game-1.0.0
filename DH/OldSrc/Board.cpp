@@ -34,6 +34,7 @@ void Board::addAt(int y, int x, chtype ch) // 특정 위치에 문자 추가 함
 chtype Board::getInput() // 입력 받기 함수 정의
 {
     return wgetch(boardWin); // 지정된 윈도우에서 입력을 받아 반환합니다.
+    // return getch();
 }
 
 void Board::getEmptyCoordinates(int &y, int &x) // 빈 좌표 가져오기 함수 정의
@@ -57,6 +58,7 @@ void Board::clear() // 보드 지우기 함수 정의
 void Board::refresh() // 화면 새로고침 함수 정의
 {
     wrefresh(boardWin); // 지정된 윈도우를 새로 고칩니다.
+    usleep(1000 * 100);
 }
 
 void Board::setTimeout(int timeout) // 입력 대기 시간 설정 함수 정의
@@ -74,6 +76,7 @@ void Board::construct(int height, int width) // 보드 생성 함수 정의
 
     // 새로운 윈도우를 생성하여 보드 윈도우를 설정합니다.
     boardWin = newwin(height, width, (yMax / 2) - (height / 2), (xMax / 2) - (width / 2));
+    nodelay(boardWin, TRUE);
     wtimeout(boardWin, 1000); // 입력 대기 시간을 1초로 설정합니다.
     keypad(boardWin, true);   // 키 패드 입력을 활성화합니다.
 }

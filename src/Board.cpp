@@ -10,8 +10,12 @@ Board::Board(int height, int width) // Board 클래스의 생성자 정의
     construct(height, width); // construct 함수 호출하여 보드 생성
 }
 
+//* 아마 너가 만져야 할 곳. 벽을 만들어야 할 수도 있다.
 void Board::initialize() // 보드 초기화 함수 정의
 {
+    //! Wall, WallHard 클래스를 이용해서 맵을 만듬. 장애물 포함.
+    //! 스네이크가 벽에 부딪히면, 게임 오버까지 구현. -> SnakeGame.cpp에 구현해야 할수도 있음.
+    //! 따라서 소스파일을 전부 JC 폴더에 옮겨서 구현.
     clear();   // 보드를 지우고
     refresh(); // 화면을 새로 고칩니다.
 }
