@@ -4,7 +4,6 @@
 #include "ObjectItems.hpp"
 #include "ObjectSnake.hpp"
 #include "ObjectWalls.hpp"
-#include "ObjectGate.hpp"
 #include <ncurses.h>
 
 class SnakeGame
