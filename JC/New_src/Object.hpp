@@ -9,6 +9,7 @@
 #define ICON_ITEM_GOOD 'G'
 #define ICON_ITEM_BAD 'B'
 #define ICON_ITEM_SLOW 'S'
+#define ICON_GATE '$'
 
 class Object
 {
