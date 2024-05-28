@@ -43,6 +43,21 @@ SnakeGame::SnakeGame()
     gameSpeed = 500;
     gameOver = false;
 
+    for(int i=1;i<24;i++){
+        board.addObject(Wall(0, i));
+        board.addObject(Wall(12, i));
+    }
+    for(int i=1;i<12;i++){
+        board.addObject(Wall(i, 0));
+        board.addObject(Wall(i, 24));
+    }
+
+    board.addObject(ImmuneWall(0,0));
+    board.addObject(ImmuneWall(12,0));
+    board.addObject(ImmuneWall(0,24));
+    board.addObject(ImmuneWall(12,24));
+
+
     goodItem = GoodItem(8, 8);
     badItem = BadItem(4, 12);
     board.addObject(goodItem);
