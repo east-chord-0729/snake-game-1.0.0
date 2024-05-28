@@ -57,7 +57,6 @@ SnakeGame::SnakeGame()
     board.addObject(ImmuneWall(0,24));
     board.addObject(ImmuneWall(12,24));
 
-
     goodItem = GoodItem(8, 8);
     badItem = BadItem(4, 12);
     board.addObject(goodItem);
@@ -159,6 +158,9 @@ void SnakeGame::updateState()
         return;
     case ICON_IWALL:
         gameOver = true;
+        return;
+    case ICON_GATE:
+        //! Gate 구현하기
         return;
     default:
         break;
