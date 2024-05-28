@@ -57,10 +57,15 @@ SnakeGame::SnakeGame()
     board.addObject(ImmuneWall(0,24));
     board.addObject(ImmuneWall(12,24));
 
+    board.addObject(Wall(6, 6));
+    board.addObject(Wall(6, 7));
+
     goodItem = GoodItem(8, 8);
     badItem = BadItem(4, 12);
     board.addObject(goodItem);
     board.addObject(badItem);
+
+    
 
     snake = Snake(3, 5, RIGHT);
     board.addObject(snake.getHead());
@@ -180,5 +185,9 @@ void SnakeGame::displayGameStart()
 
 void SnakeGame::displayGameOver()
 {
-    ; // TODO: '아무 키나 누르면 종료'라는 알림
+    if(gameOver){
+        mvprintw(0, 0, "Game Over! press any key to exit");
+        refresh();
+        napms(2000);
+    }
 }
