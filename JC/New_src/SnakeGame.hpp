@@ -4,6 +4,7 @@
 #include "ObjectItems.hpp"
 #include "ObjectSnake.hpp"
 #include "ObjectWalls.hpp"
+#include "ObjectGate.hpp"
 #include <ncurses.h>
 
 class SnakeGame
@@ -61,8 +62,6 @@ SnakeGame::SnakeGame()
     badItem = BadItem(4, 12);
     board.addObject(goodItem);
     board.addObject(badItem);
-
-    
 
     snake = Snake(3, 5, RIGHT);
     board.addObject(snake.getHead());
@@ -123,7 +122,7 @@ void SnakeGame::updateState()
 {
     SnakeSegment nextHead = snake.getNextHead();
     Object collisionObject = board.getObject(nextHead.getX(), nextHead.getY());
-
+    
     /* check collision */
     switch (collisionObject.getIcon())
     {
