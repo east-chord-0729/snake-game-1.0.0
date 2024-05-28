@@ -2,6 +2,9 @@
 
 #include <ncurses.h>
 
+#define BOARD_COLS 13
+#define BOARD_ROWS 25
+
 #define ICON_EMPTY ' '
 #define ICON_WALL 'O'
 #define ICON_IWALL 'I'
@@ -10,6 +13,15 @@
 #define ICON_ITEM_BAD 'B'
 #define ICON_ITEM_SLOW 'S'
 #define ICON_GATE '$'
+
+
+enum Direction
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
 
 class Object
 {

@@ -4,7 +4,9 @@
 #include "ObjectItems.hpp"
 #include "ObjectSnake.hpp"
 #include "ObjectWalls.hpp"
+#include "ObjectGate.hpp"
 #include <ncurses.h>
+#include <iostream>
 
 class SnakeGame
 {
@@ -18,14 +20,19 @@ class SnakeGame
     Snake snake;
     GoodItem goodItem;
     BadItem badItem;
+    Gate* gate1;
+    Gate* gate2;
     int gameSpeed;
     bool gameOver;
+    bool isTeleporting;
 
     void handleInput();
     void updateState();
     void render();
     void displayGameStart();
     void displayGameOver();
+    void generateGate();
+    void handleGateCollision(Gate *gate, Direction entryDirection);
 };
 
 SnakeGame::SnakeGame()
@@ -68,6 +75,11 @@ SnakeGame::SnakeGame()
     board.addObject(snake.getHead());
     snake.addHead(snake.getNextHead());
     board.addObject(snake.getHead()); // TODO snake가 이미 길게 생성된 상태에서 한 번에 보드에 추가하고 싶음.
+
+    gate1 = NULL;
+    gate2 = NULL;
+    isTeleporting = false;
+    generateGate();
 }
 
 SnakeGame::~SnakeGame()
@@ -117,10 +129,78 @@ void SnakeGame::handleInput()
     }
 }
 
+void SnakeGame::generateGate()
+{
+    std::vector<Wall> wallPositions;
+    for (int y = 0; y < BOARD_ROWS; y++) {
+        for (int x = 0; x < BOARD_COLS; x++) {
+            Object obj = board.getObject(x, y);
+            if (obj.getIcon() == ICON_WALL) {
+                wallPositions.push_back(Wall(y, x));
+            }
+        }
+    }
+
+    std::random_shuffle(wallPositions.begin(), wallPositions.end());
+
+    if (wallPositions.size() >= 2) {
+        Wall pos1 = wallPositions[0];
+        Wall pos2 = wallPositions[1];
+
+        gate1 = new Gate(pos1.getY(), pos1.getX());
+        gate2 = new Gate(pos2.getY(), pos2.getX());
+        gate1->pairWith(gate2);
+
+        board.addObject(*gate1);
+        board.addObject(*gate2);
+    }
+}
+
+void SnakeGame::handleGateCollision(Gate *gate, Direction entryDirection)
+{
+    Gate *exitGate = gate->getPairedGate();
+    Direction exitDirection = exitGate->getExitDirection(entryDirection);
+
+    int newY = exitGate->getY();
+    int newX = exitGate->getX();
+
+    switch (exitDirection) {
+        case UP:    newY--; break;
+        case DOWN:  newY++; break;
+        case LEFT:  newX--; break;
+        case RIGHT: newX++; break;
+    }
+
+    snake.addHead(SnakeSegment(newY, newX));
+    board.addObject(SnakeSegment(newY, newX));
+    isTeleporting = true;
+}
+
 void SnakeGame::updateState()
 {
     SnakeSegment nextHead = snake.getNextHead();
     Object collisionObject = board.getObject(nextHead.getX(), nextHead.getY());
+
+    SnakeSegment gatehead = SnakeSegment(3, 5);
+    // Gate *testgate = (Gate*)(&collisionObject);
+    // Gate *exitGate = testgate->getPairedGate();
+    // Direction exitDirection = exitGate->getExitDirection(snake.getDirection());
+    // int newY = exitGate->getY();
+    // int newX = exitGate->getX();
+    // // switch (exitDirection) {
+    // //     case UP:    newY--; break;
+    // //     case DOWN:  newY++; break;
+    // //     case LEFT:  newX--; break;
+    // //     case RIGHT: newX++; break;
+    // // }
+    // SnakeSegment gatehead = SnakeSegment(newY, newX);
+
+    if (isTeleporting)
+    {
+        board.removeObject(snake.getTail());
+        snake.removeTail();
+        isTeleporting = false;
+    }
     
     /* check collision */
     switch (collisionObject.getIcon())
@@ -160,7 +240,11 @@ void SnakeGame::updateState()
         gameOver = true;
         return;
     case ICON_GATE:
-        //! Gate 구현하기
+        //handleGateCollision(static_cast<Gate*>(&collisionObject), snake.getDirection());
+        board.addObject(gatehead);
+        snake.addHead(gatehead);
+        board.removeObject(snake.getTail());
+        snake.removeTail();
         return;
     default:
         break;
@@ -182,6 +266,8 @@ void SnakeGame::displayGameOver()
 {
     if(gameOver){
         mvprintw(0, 0, "Game Over! press any key to exit");
+        // snake의 길이 출력
+        mvprintw(1, 0, "Your snake length: %d", snake.getLength());
         refresh();
         napms(2000);
     }

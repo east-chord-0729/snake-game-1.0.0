@@ -38,6 +38,7 @@ class Snake
     SnakeSegment getTail();
     SnakeSegment getNextHead();
     SnakeSegment getNextTail();
+    int getLength();
 
   private:
     std::deque<SnakeSegment> segments;
@@ -114,4 +115,9 @@ SnakeSegment Snake::getNextHead()
     }
 
     return SnakeSegment(nextY, nextX);
+}
+
+int Snake::getLength()
+{
+    return segments.size();
 }
