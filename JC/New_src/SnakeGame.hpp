@@ -39,26 +39,23 @@ SnakeGame::SnakeGame()
     nodelay(stdscr, TRUE); /* 입력 대기 없이 getch가 즉시 반환되도록 설정 */
     srand(time(0));
 
-    board = Board(13, 25);
+    board = Board(BOARD_COLS, BOARD_ROWS);
     gameSpeed = 500;
     gameOver = false;
 
-    for(int i=1;i<24;i++){
+    for(int i=1;i<BOARD_ROWS-1;i++){
         board.addObject(Wall(0, i));
-        board.addObject(Wall(12, i));
+        board.addObject(Wall(BOARD_COLS-1, i));
     }
-    for(int i=1;i<12;i++){
+    for(int i=1;i<BOARD_COLS-1;i++){
         board.addObject(Wall(i, 0));
-        board.addObject(Wall(i, 24));
+        board.addObject(Wall(i, BOARD_ROWS-1));
     }
 
     board.addObject(ImmuneWall(0,0));
-    board.addObject(ImmuneWall(12,0));
-    board.addObject(ImmuneWall(0,24));
-    board.addObject(ImmuneWall(12,24));
-
-    board.addObject(Wall(6, 6));
-    board.addObject(Wall(6, 7));
+    board.addObject(ImmuneWall(BOARD_COLS-1,0));
+    board.addObject(ImmuneWall(0,BOARD_ROWS-1));
+    board.addObject(ImmuneWall(BOARD_COLS-1,BOARD_ROWS-1));
 
     goodItem = GoodItem(8, 8);
     badItem = BadItem(4, 12);

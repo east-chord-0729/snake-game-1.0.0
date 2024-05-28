@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define BOARD_COLS 13
+#define BOARD_ROWS 25
+
 class Board
 {
   public:
