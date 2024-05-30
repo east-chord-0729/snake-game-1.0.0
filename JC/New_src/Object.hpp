@@ -14,14 +14,6 @@
 #define ICON_ITEM_SLOW 'S'
 #define ICON_GATE '$'
 
-enum Direction
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-};
-
 class Object
 {
   public:

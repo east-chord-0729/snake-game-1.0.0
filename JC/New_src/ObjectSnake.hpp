@@ -3,6 +3,14 @@
 #include <deque>
 #include "Object.hpp"
 
+enum Direction
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
 class SnakeSegment : public Object
 {
   public:
@@ -30,7 +38,7 @@ class Snake
     SnakeSegment getTail();
     SnakeSegment getNextHead();
     SnakeSegment getNextTail();
-    int getLength();
+    int getLength(); // return the length of the snake
 
   private:
     std::deque<SnakeSegment> segments;
@@ -111,5 +119,5 @@ SnakeSegment Snake::getNextHead()
 
 int Snake::getLength()
 {
-    return segments.size();
+    return segments.size(); 
 }

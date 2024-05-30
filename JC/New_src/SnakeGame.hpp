@@ -19,19 +19,19 @@ class SnakeGame
     Snake snake;
     GoodItem goodItem;
     BadItem badItem;
-    Gate gate1;
+    Gate gate1; //GATE 두개 추가
     Gate gate2;
     int gameSpeed;
     bool gameOver;
-    int mapNum=3;
+    int mapNum=3; //맵 선택
 
     void handleInput();
     void updateState();
     void render();
     void displayGameStart();
     void displayGameOver();
-    void generateGate();
-    void GateDirection(SnakeSegment gatehead);
+    void generateGate(); //GATE 생성
+    void GateDirection(SnakeSegment gatehead); //GATE 방향 설정
 };
 
 SnakeGame::SnakeGame()
@@ -49,12 +49,12 @@ SnakeGame::SnakeGame()
     gameSpeed = 500;
     gameOver = false;
 
-    for(int i=0;i<BOARD_COLS;i++){
+    for(int i=0;i<BOARD_COLS;i++){ //맵 생성
         for(int j=0;j<BOARD_ROWS;j++){
-            if(map[mapNum][i][j] == 1){
-                board.addObject(Wall(i,j));
+            if(map[mapNum][i][j] == 1){ // 1은 Wall
+                board.addObject(Wall(i,j)); 
             }
-            else if(map[mapNum][i][j] == 2){
+            else if(map[mapNum][i][j] == 2){ // 2는 ImmuneWall
                 board.addObject(ImmuneWall(i,j));
             }
         }
@@ -72,7 +72,7 @@ SnakeGame::SnakeGame()
     snake.addHead(snake.getNextHead());
     board.addObject(snake.getHead()); // TODO snake가 이미 길게 생성된 상태에서 한 번에 보드에 추가하고 싶음.
 
-    generateGate();
+    generateGate(); //GATE 생성
 }
 
 SnakeGame::~SnakeGame()
@@ -125,7 +125,7 @@ void SnakeGame::handleInput()
 void SnakeGame::generateGate()
 {
     int x, y;
-    do
+    do // Wall위에 gate1 생성
     {
         x = rand() % BOARD_COLS;
         y = rand() % BOARD_ROWS;
@@ -134,7 +134,7 @@ void SnakeGame::generateGate()
     gate1 = Gate(x, y);
     board.addObject(gate1);
 
-    do
+    do // Wall위에 gate2 생성
     {
         x = rand() % BOARD_COLS;
         y = rand() % BOARD_ROWS;
@@ -149,7 +149,7 @@ void SnakeGame::updateState()
     SnakeSegment nextHead = snake.getNextHead();
     Object collisionObject = board.getObject(nextHead.getX(), nextHead.getY());
     
-    SnakeSegment gatehead = SnakeSegment(0, 0);
+    SnakeSegment gatehead = SnakeSegment(0, 0); // 또다른 GATE가 들어갈 변수
 
     /* check collision */
     switch (collisionObject.getIcon())
@@ -189,17 +189,18 @@ void SnakeGame::updateState()
         gameOver = true;
         return;
     case ICON_GATE:
-        if (nextHead.getY() == gate1.getY() && nextHead.getX() == gate1.getX()) {
-            gatehead = SnakeSegment(gate2.getY(), gate2.getX());
+        if (nextHead.getY() == gate1.getY() && nextHead.getX() == gate1.getX()) { // GATE1에 닿았을 때
+            gatehead = SnakeSegment(gate2.getY(), gate2.getX()); // GATE2를 gatehead에 저장
         }
-        else {
-            gatehead = SnakeSegment(gate1.getY(), gate1.getX());
+        else { // GATE2에 닿았을 때
+            gatehead = SnakeSegment(gate1.getY(), gate1.getX()); // GATE1을 gatehead에 저장
         }
-        snake.addHead(gatehead);
+        snake.addHead(gatehead); // gatehead를 snake의 head로 설정
         board.removeObject(snake.getTail());
         snake.removeTail();
-        GateDirection(gatehead);
-        nextHead = snake.getNextHead();
+
+        GateDirection(gatehead); // GATE 방향 설정
+        nextHead = snake.getNextHead(); // 방향 설정 후 다음 위치로 이동
         board.addObject(nextHead);
         snake.addHead(nextHead);
         board.removeObject(snake.getTail());
@@ -233,36 +234,37 @@ void SnakeGame::displayGameOver()
 
 void SnakeGame::GateDirection(SnakeSegment gatehead)
 {
-    SnakeSegment testnextHead = snake.getNextHead();
+    SnakeSegment testnextHead = snake.getNextHead(); // 원래 방향으로 이동했을 때의 위치
     Object testcollisionObject = board.getObject(testnextHead.getX(), testnextHead.getY());
     
-    if(gatehead.getY() == 0){
-        snake.setDirection(DOWN);
+    if(gatehead.getY() == 0){ // GATE가 맵의 상단에 있을떄
+        snake.setDirection(DOWN); // GATE의 방향을 DOWN으로 설정
     }
-    else if(gatehead.getY() == BOARD_COLS-1){
-        snake.setDirection(UP);
+    else if(gatehead.getY() == BOARD_COLS-1){ // GATE가 맵의 하단에 있을때
+        snake.setDirection(UP); // GATE의 방향을 UP으로 설정
     }
-    else if(gatehead.getX() == 0){
-        snake.setDirection(RIGHT);
+    else if(gatehead.getX() == 0){ // GATE가 맵의 좌측에 있을때
+        snake.setDirection(RIGHT); // GATE의 방향을 RIGHT으로 설정
     }
-    else if(gatehead.getX() == BOARD_ROWS-1){
-        snake.setDirection(LEFT);
+    else if(gatehead.getX() == BOARD_ROWS-1){ // GATE가 맵의 우측에 있을때
+        snake.setDirection(LEFT); // GATE의 방향을 LEFT으로 설정
     }
-    else{
-        if(testcollisionObject.getIcon() == ICON_WALL){
+    else{ // GATE가 맵의 가장자리에 있지 않을때
+        // 원래의 방향으로 갔을 떄 벽이 있을때만 방향을 바꿈
+        if(testcollisionObject.getIcon() == ICON_WALL){ // 원래 방향으로 이동했을때 벽이 있을때
             switch (snake.getDirection())
             {
-                case UP:
-                    snake.setDirection(RIGHT);
+                case UP: // 원래 방향이 UP일때
+                    snake.setDirection(RIGHT); // GATE의 방향을 RIGHT으로 설정
                     break;
-                case DOWN:
-                    snake.setDirection(LEFT);
+                case DOWN: // 원래 방향이 DOWN일때
+                    snake.setDirection(LEFT); // GATE의 방향을 LEFT으로 설정
                     break;
-                case LEFT:
-                    snake.setDirection(UP);
+                case LEFT: // 원래 방향이 LEFT일때
+                    snake.setDirection(UP); // GATE의 방향을 UP으로 설정
                     break;
-                case RIGHT:
-                    snake.setDirection(DOWN);
+                case RIGHT: // 원래 방향이 RIGHT일때
+                    snake.setDirection(DOWN); // GATE의 방향을 DOWN으로 설정
                     break;
                 default:
                     break;
