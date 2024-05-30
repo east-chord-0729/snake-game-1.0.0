@@ -24,7 +24,8 @@ class SnakeGame
     Gate* gate2;
     int gameSpeed;
     bool gameOver;
-    bool isTeleporting;
+    int snakeLength=0;
+    int gateLength=0;
 
     void handleInput();
     void updateState();
@@ -32,7 +33,7 @@ class SnakeGame
     void displayGameStart();
     void displayGameOver();
     void generateGate();
-    void handleGateCollision(Gate *gate, Direction entryDirection);
+    void GateDirection(SnakeSegment gatehead);
 };
 
 SnakeGame::SnakeGame()
@@ -50,24 +51,41 @@ SnakeGame::SnakeGame()
     gameSpeed = 500;
     gameOver = false;
 
-    for(int i=1;i<BOARD_ROWS-1;i++){
-        board.addObject(Wall(0, i));
-        board.addObject(Wall(BOARD_COLS-1, i));
-    }
-    for(int i=1;i<BOARD_COLS-1;i++){
-        board.addObject(Wall(i, 0));
-        board.addObject(Wall(i, BOARD_ROWS-1));
+    // for(int i=1;i<BOARD_ROWS-1;i++){
+    //     board.addObject(Wall(0, i));
+    //     board.addObject(Wall(BOARD_COLS-1, i));
+    // }
+    // for(int i=1;i<BOARD_COLS-1;i++){
+    //     board.addObject(Wall(i, 0));
+    //     board.addObject(Wall(i, BOARD_ROWS-1));
+    // }
+
+    // board.addObject(ImmuneWall(0,0));
+    // board.addObject(ImmuneWall(BOARD_COLS-1,0));
+    // board.addObject(ImmuneWall(0,BOARD_ROWS-1));
+    // board.addObject(ImmuneWall(BOARD_COLS-1,BOARD_ROWS-1));
+    int mapnum = 1;
+    for(int i=0;i<BOARD_COLS;i++){
+        for(int j=0;j<BOARD_ROWS;j++){
+            if(map[mapnum][i][j] == 1){
+                board.addObject(Wall(i,j));
+            }
+            else if(map[mapnum][i][j] == 2){
+                board.addObject(ImmuneWall(i,j));
+            }
+            else if(map[mapnum][i][j] == 3){
+                board.addObject(GoodItem(i,j));
+            }
+            else if(map[mapnum][i][j] == 4){
+                board.addObject(BadItem(i,j));
+            }
+        }
     }
 
-    board.addObject(ImmuneWall(0,0));
-    board.addObject(ImmuneWall(BOARD_COLS-1,0));
-    board.addObject(ImmuneWall(0,BOARD_ROWS-1));
-    board.addObject(ImmuneWall(BOARD_COLS-1,BOARD_ROWS-1));
-
-    goodItem = GoodItem(8, 8);
-    badItem = BadItem(4, 12);
-    board.addObject(goodItem);
-    board.addObject(badItem);
+    // goodItem = GoodItem(8, 8);
+    // badItem = BadItem(4, 12);
+    // board.addObject(goodItem);
+    // board.addObject(badItem);
 
     snake = Snake(3, 5, RIGHT);
     board.addObject(snake.getHead());
@@ -78,7 +96,6 @@ SnakeGame::SnakeGame()
 
     gate1 = NULL;
     gate2 = NULL;
-    isTeleporting = false;
     generateGate();
 }
 
@@ -156,51 +173,13 @@ void SnakeGame::generateGate()
     }
 }
 
-void SnakeGame::handleGateCollision(Gate *gate, Direction entryDirection)
-{
-    Gate *exitGate = gate->getPairedGate();
-    Direction exitDirection = exitGate->getExitDirection(entryDirection);
-
-    int newY = exitGate->getY();
-    int newX = exitGate->getX();
-
-    switch (exitDirection) {
-        case UP:    newY--; break;
-        case DOWN:  newY++; break;
-        case LEFT:  newX--; break;
-        case RIGHT: newX++; break;
-    }
-
-    snake.addHead(SnakeSegment(newY, newX));
-    board.addObject(SnakeSegment(newY, newX));
-    isTeleporting = true;
-}
-
 void SnakeGame::updateState()
 {
     SnakeSegment nextHead = snake.getNextHead();
     Object collisionObject = board.getObject(nextHead.getX(), nextHead.getY());
+    SnakeSegment testnextHead = SnakeSegment(0, 0);
 
-    SnakeSegment gatehead = SnakeSegment(3, 5);
-    // Gate *testgate = (Gate*)(&collisionObject);
-    // Gate *exitGate = testgate->getPairedGate();
-    // Direction exitDirection = exitGate->getExitDirection(snake.getDirection());
-    // int newY = exitGate->getY();
-    // int newX = exitGate->getX();
-    // // switch (exitDirection) {
-    // //     case UP:    newY--; break;
-    // //     case DOWN:  newY++; break;
-    // //     case LEFT:  newX--; break;
-    // //     case RIGHT: newX++; break;
-    // // }
-    // SnakeSegment gatehead = SnakeSegment(newY, newX);
-
-    if (isTeleporting)
-    {
-        board.removeObject(snake.getTail());
-        snake.removeTail();
-        isTeleporting = false;
-    }
+    SnakeSegment gatehead = SnakeSegment(0, 0);
     
     /* check collision */
     switch (collisionObject.getIcon())
@@ -240,11 +219,22 @@ void SnakeGame::updateState()
         gameOver = true;
         return;
     case ICON_GATE:
-        //handleGateCollision(static_cast<Gate*>(&collisionObject), snake.getDirection());
-        board.addObject(gatehead);
+        if (nextHead.getY() == gate1->getY() && nextHead.getX() == gate1->getX()) {
+            gatehead = SnakeSegment(gate2->getY(), gate2->getX());
+        }
+        else {
+            gatehead = SnakeSegment(gate1->getY(), gate1->getX());
+        }
         snake.addHead(gatehead);
         board.removeObject(snake.getTail());
         snake.removeTail();
+        GateDirection(gatehead);
+        testnextHead = snake.getNextHead();
+        board.addObject(testnextHead);
+        snake.addHead(testnextHead);
+        board.removeObject(snake.getTail());
+        snake.removeTail();
+        board.addObject(Wall(nextHead.getY(), nextHead.getX()));
         return;
     default:
         break;
@@ -270,5 +260,21 @@ void SnakeGame::displayGameOver()
         mvprintw(1, 0, "Your snake length: %d", snake.getLength());
         refresh();
         napms(2000);
+    }
+}
+
+void SnakeGame::GateDirection(SnakeSegment gatehead)
+{
+    if(gatehead.getY() == 0){
+        snake.setDirection(DOWN);
+    }
+    else if(gatehead.getY() == BOARD_COLS-1){
+        snake.setDirection(UP);
+    }
+    else if(gatehead.getX() == 0){
+        snake.setDirection(RIGHT);
+    }
+    else if(gatehead.getX() == BOARD_ROWS-1){
+        snake.setDirection(LEFT);
     }
 }
