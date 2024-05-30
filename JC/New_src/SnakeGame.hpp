@@ -131,7 +131,7 @@ void SnakeGame::generateGate()
         y = rand() % BOARD_ROWS;
     } while (board.getObject(x, y).getIcon() != ICON_WALL);
 
-    gate1 = Gate(x, y);
+    gate1 = Gate(y, x);
     board.addObject(gate1);
 
     do // Wall위에 gate2 생성
@@ -140,7 +140,7 @@ void SnakeGame::generateGate()
         y = rand() % BOARD_ROWS;
     } while (board.getObject(x, y).getIcon() != ICON_WALL);
 
-    gate2 = Gate(x, y);
+    gate2 = Gate(y, x);
     board.addObject(gate2);
 }
 
