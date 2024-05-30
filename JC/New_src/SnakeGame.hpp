@@ -23,7 +23,7 @@ class SnakeGame
     Gate gate2;
     int gameSpeed;
     bool gameOver;
-    int mapNum=0;
+    int mapNum=3;
 
     void handleInput();
     void updateState();
@@ -233,6 +233,9 @@ void SnakeGame::displayGameOver()
 
 void SnakeGame::GateDirection(SnakeSegment gatehead)
 {
+    SnakeSegment testnextHead = snake.getNextHead();
+    Object testcollisionObject = board.getObject(testnextHead.getX(), testnextHead.getY());
+    
     if(gatehead.getY() == 0){
         snake.setDirection(DOWN);
     }
@@ -244,5 +247,26 @@ void SnakeGame::GateDirection(SnakeSegment gatehead)
     }
     else if(gatehead.getX() == BOARD_ROWS-1){
         snake.setDirection(LEFT);
+    }
+    else{
+        if(testcollisionObject.getIcon() == ICON_WALL){
+            switch (snake.getDirection())
+            {
+                case UP:
+                    snake.setDirection(RIGHT);
+                    break;
+                case DOWN:
+                    snake.setDirection(LEFT);
+                    break;
+                case LEFT:
+                    snake.setDirection(UP);
+                    break;
+                case RIGHT:
+                    snake.setDirection(DOWN);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
