@@ -24,6 +24,8 @@ class SnakeGame
     int gameSpeed;
     bool gameOver;
     int mapNum=3; //맵 선택
+    int snakelength = 0;
+    int gateLength = 0;
 
     void handleInput();
     void updateState();
