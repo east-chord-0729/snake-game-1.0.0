@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Board.hpp"
+#include "ObjectGate.hpp"
 #include "ObjectItems.hpp"
 #include "ObjectSnake.hpp"
 #include "ObjectWalls.hpp"

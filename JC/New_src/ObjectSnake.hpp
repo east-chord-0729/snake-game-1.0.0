@@ -3,14 +3,6 @@
 #include <deque>
 #include "Object.hpp"
 
-enum Direction
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-};
-
 class SnakeSegment : public Object
 {
   public:
