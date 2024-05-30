@@ -19,14 +19,19 @@ class SnakeGame
     Snake snake;
     GoodItem goodItem;
     BadItem badItem;
+    Gate gate1;
+    Gate gate2;
     int gameSpeed;
     bool gameOver;
+    int mapNum=0;
 
     void handleInput();
     void updateState();
     void render();
     void displayGameStart();
     void displayGameOver();
+    void generateGate();
+    void GateDirection(SnakeSegment gatehead);
 };
 
 SnakeGame::SnakeGame()
@@ -44,19 +49,16 @@ SnakeGame::SnakeGame()
     gameSpeed = 500;
     gameOver = false;
 
-    for(int i=1;i<BOARD_ROWS-1;i++){
-        board.addObject(Wall(0, i));
-        board.addObject(Wall(BOARD_COLS-1, i));
+    for(int i=0;i<BOARD_COLS;i++){
+        for(int j=0;j<BOARD_ROWS;j++){
+            if(map[mapNum][i][j] == 1){
+                board.addObject(Wall(i,j));
+            }
+            else if(map[mapNum][i][j] == 2){
+                board.addObject(ImmuneWall(i,j));
+            }
+        }
     }
-    for(int i=1;i<BOARD_COLS-1;i++){
-        board.addObject(Wall(i, 0));
-        board.addObject(Wall(i, BOARD_ROWS-1));
-    }
-
-    board.addObject(ImmuneWall(0,0));
-    board.addObject(ImmuneWall(BOARD_COLS-1,0));
-    board.addObject(ImmuneWall(0,BOARD_ROWS-1));
-    board.addObject(ImmuneWall(BOARD_COLS-1,BOARD_ROWS-1));
 
     goodItem = GoodItem(8, 8);
     badItem = BadItem(4, 12);
@@ -69,6 +71,8 @@ SnakeGame::SnakeGame()
     board.addObject(snake.getHead());
     snake.addHead(snake.getNextHead());
     board.addObject(snake.getHead()); // TODO snake가 이미 길게 생성된 상태에서 한 번에 보드에 추가하고 싶음.
+
+    generateGate();
 }
 
 SnakeGame::~SnakeGame()
@@ -118,11 +122,35 @@ void SnakeGame::handleInput()
     }
 }
 
+void SnakeGame::generateGate()
+{
+    int x, y;
+    do
+    {
+        x = rand() % BOARD_COLS;
+        y = rand() % BOARD_ROWS;
+    } while (board.getObject(x, y).getIcon() != ICON_WALL);
+
+    gate1 = Gate(x, y);
+    board.addObject(gate1);
+
+    do
+    {
+        x = rand() % BOARD_COLS;
+        y = rand() % BOARD_ROWS;
+    } while (board.getObject(x, y).getIcon() != ICON_WALL);
+
+    gate2 = Gate(x, y);
+    board.addObject(gate2);
+}
+
 void SnakeGame::updateState()
 {
     SnakeSegment nextHead = snake.getNextHead();
     Object collisionObject = board.getObject(nextHead.getX(), nextHead.getY());
     
+    SnakeSegment gatehead = SnakeSegment(0, 0);
+
     /* check collision */
     switch (collisionObject.getIcon())
     {
@@ -161,7 +189,21 @@ void SnakeGame::updateState()
         gameOver = true;
         return;
     case ICON_GATE:
-        //! Gate 구현하기
+        if (nextHead.getY() == gate1.getY() && nextHead.getX() == gate1.getX()) {
+            gatehead = SnakeSegment(gate2.getY(), gate2.getX());
+        }
+        else {
+            gatehead = SnakeSegment(gate1.getY(), gate1.getX());
+        }
+        snake.addHead(gatehead);
+        board.removeObject(snake.getTail());
+        snake.removeTail();
+        GateDirection(gatehead);
+        nextHead = snake.getNextHead();
+        board.addObject(nextHead);
+        snake.addHead(nextHead);
+        board.removeObject(snake.getTail());
+        snake.removeTail();
         return;
     default:
         break;
@@ -183,7 +225,24 @@ void SnakeGame::displayGameOver()
 {
     if(gameOver){
         mvprintw(0, 0, "Game Over! press any key to exit");
+        mvprintw(1, 0, "Your snake length: %d", snake.getLength());
         refresh();
         napms(2000);
+    }
+}
+
+void SnakeGame::GateDirection(SnakeSegment gatehead)
+{
+    if(gatehead.getY() == 0){
+        snake.setDirection(DOWN);
+    }
+    else if(gatehead.getY() == BOARD_COLS-1){
+        snake.setDirection(UP);
+    }
+    else if(gatehead.getX() == 0){
+        snake.setDirection(RIGHT);
+    }
+    else if(gatehead.getX() == BOARD_ROWS-1){
+        snake.setDirection(LEFT);
     }
 }
