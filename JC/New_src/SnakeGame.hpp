@@ -153,6 +153,19 @@ void SnakeGame::updateState()
     
     SnakeSegment gatehead = SnakeSegment(0, 0); // 또다른 GATE가 들어갈 변수
 
+    if (snakelength != 0)
+    {
+        gateLength ++;
+        if (gateLength == snakelength)
+        {
+            board.addObject(Wall(gate1.getY(), gate1.getX()));
+            board.addObject(Wall(gate2.getY(), gate2.getX()));
+            //generateGate();
+            gateLength = 0;
+            snakelength = 0;
+        }
+    }
+
     /* check collision */
     switch (collisionObject.getIcon())
     {
@@ -207,6 +220,7 @@ void SnakeGame::updateState()
         snake.addHead(nextHead);
         board.removeObject(snake.getTail());
         snake.removeTail();
+        snakelength = snake.getLength();
         return;
     default:
         break;
