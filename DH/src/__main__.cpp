@@ -1,8 +1,9 @@
-#include "SnakeGame.hpp"
+#include "Game.hpp"
 
 int main()
 {
-    SnakeGame game;
+    Game game;
     game.run();
+
     return 0;
 }

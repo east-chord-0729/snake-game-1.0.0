@@ -96,8 +96,6 @@ void SnakeGame::run()
     }
 
     displayGameOver();
-
-    // TODO: 키 입력 받기.
 }
 
 void SnakeGame::handleInput()
@@ -226,6 +224,8 @@ void SnakeGame::displayGameStart()
 
 void SnakeGame::displayGameOver()
 {
+    //! 화면 싹 지우고 중심에 글 뜨게 하기
+    //! 잠시후에 사라지지 말고, 버튼을 눌러야 사라지기.
     if(gameOver){
         mvprintw(0, 0, "Game Over! press any key to exit");
         mvprintw(1, 0, "Your snake length: %d", snake.getLength());
