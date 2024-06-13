@@ -1,7 +1,7 @@
 #pragma once
 
-#include <deque>
 #include "Object.hpp"
+#include <deque>
 
 class SnakeSegment : public Object
 {
@@ -19,7 +19,7 @@ SnakeSegment::SnakeSegment(int y, int x)
 class Snake
 {
   public:
-    Snake(int x = 0, int y = 0, Direction d = RIGHT);
+    Snake(int x = 0, int y = 0, Direction d = NONE);
     void addHead(SnakeSegment head);
     void addTail(SnakeSegment tail);
     void removeHead();
@@ -29,8 +29,7 @@ class Snake
     SnakeSegment getHead();
     SnakeSegment getTail();
     SnakeSegment getNextHead();
-    SnakeSegment getNextTail();
-    int getLength();
+    int getLength(); // return the length of the snake
 
   private:
     std::deque<SnakeSegment> segments;
@@ -39,12 +38,22 @@ class Snake
 
 Snake::Snake(int x, int y, Direction d)
 {
-    addHead(SnakeSegment(x, y));
+    SnakeSegment head = SnakeSegment(x, y);
+    head.setIcon(ICON_SNAKE_HEAD);
+    addHead(head);
+
     setDirection(d);
 }
 
 void Snake::addHead(SnakeSegment segment)
 {
+    if (getLength() != 0)
+    {
+        getHead().setIcon(ICON_SNAKE);
+    }
+
+    segment.setIcon(ICON_SNAKE_HEAD);
+
     this->segments.push_front(segment);
 }
 
@@ -56,6 +65,7 @@ void Snake::addTail(SnakeSegment segment)
 void Snake::removeHead()
 {
     this->segments.pop_front();
+    getHead().setIcon(ICON_SNAKE_HEAD);
 }
 
 void Snake::removeTail()
@@ -103,6 +113,8 @@ SnakeSegment Snake::getNextHead()
         break;
     case RIGHT:
         nextX++;
+        break;
+    default:
         break;
     }
 

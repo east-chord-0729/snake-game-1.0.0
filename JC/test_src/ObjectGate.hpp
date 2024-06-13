@@ -1,61 +1,48 @@
 #pragma once
+
 #include "Object.hpp"
 
-#include <stdlib.h>
-#include <vector>
-#include <algorithm>
 class Gate : public Object
 {
-  public:
-    Gate(int y = 0, int x = 0);
-    void pairWith(Gate *other);
-    Gate* getPairedGate();
-    bool isPaired();
-    Direction getExitDirection(Direction entryDirection);
-
   private:
-    Gate *pairedGate;
-    Direction determineExitDirection(Direction entryDirection);
-};
+    Direction direction;
 
-Gate::Gate(int y, int x) : Object(y, x, ICON_GATE), pairedGate(nullptr) {}
-
-void Gate::pairWith(Gate *other)
-{
-    pairedGate = other;
-    other->pairedGate = this;
-}
-
-Gate* Gate::getPairedGate()
-{
-    return pairedGate;
-}
-
-bool Gate::isPaired()
-{
-    return pairedGate != nullptr;
-}
-
-Direction Gate::getExitDirection(Direction entryDirection)
-{
-    return determineExitDirection(entryDirection);
-}
-
-Direction Gate::determineExitDirection(Direction entryDirection)
-{
-    // If the gate is on the edge, return fixed direction
-    if (y == 0) return DOWN; // Gate is on the top edge
-    if (y == BOARD_ROWS - 1) return UP; // Gate is on the bottom edge
-    if (x == 0) return RIGHT; // Gate is on the left edge
-    if (x == BOARD_COLS - 1) return LEFT; // Gate is on the right edge
-
-    // If the gate is in the middle, prioritize directions
-    switch (entryDirection)
+  public:
+    Gate(int y = 0, int x = 0)
     {
-        case UP:    return DOWN;
-        case DOWN:  return UP;
-        case LEFT:  return RIGHT;
-        case RIGHT: return LEFT;
-        default:    return UP; // Default direction
+        this->y = y;
+        this->x = x;
+        this->icon = ICON_GATE;
+
+        if (y == 0)
+        {                     // GATE가 맵의 상단에 있을떄
+            direction = DOWN; // GATE의 방향을 DOWN으로 설정
+        }
+        else if (y == BOARD_COLS - 1)
+        {                   // GATE가 맵의 하단에 있을때
+            direction = UP; // GATE의 방향을 UP으로 설정
+        }
+        else if (x == 0)
+        {                      // GATE가 맵의 좌측에 있을때
+            direction = RIGHT; // GATE의 방향을 RIGHT으로 설정
+        }
+        else if (x == BOARD_ROWS - 1)
+        {                     // GATE가 맵의 우측에 있을때
+            direction = LEFT; // GATE의 방향을 LEFT으로 설정
+        }
+        else
+        {
+            direction = NONE; // 방향 설정 안됨.
+        }
     }
-}
+
+    Direction getDirection()
+    {
+        return this->direction;
+    }
+
+    void setDirection(Direction d)
+    {
+        direction = d;
+    }
+};
