@@ -20,6 +20,7 @@ class GameController
 
     /* remove function */
     template <typename ItemType> void removeItem(Board &board, ItemType &item);
+    void removeGate(Board &board, Gate &gate1, Gate &gate2);
     //! removeGate.
 
     /* event function */
@@ -92,6 +93,13 @@ void GameController::generateSnake(Board &board, Snake &snake)
 template <typename ItemType> void GameController::removeItem(Board &board, ItemType &item)
 {
     board.addIcon(item.getY(), item.getX(), ICON_EMPTY);
+}
+
+// gate1, gate2 삭제 함수 추가
+void GameController::removeGate(Board &board, Gate &gate1, Gate &gate2)
+{
+    board.addIcon(gate1.getY(), gate1.getX(), ICON_WALL);
+    board.addIcon(gate2.getY(), gate2.getX(), ICON_WALL);
 }
 
 void GameController::moveSnake(Board &board, Snake &snake)

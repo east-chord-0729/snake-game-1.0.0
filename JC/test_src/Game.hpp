@@ -56,7 +56,7 @@ Game::Game()
     /* Init member variables */
     board = Board(BOARD_COLS, BOARD_ROWS);
     gameSpeed = 300;
-    gameLevel = 3; //! 0으로 설정하게
+    gameLevel = 0; //! 0으로 설정하게
     gameOver = false;
     gameTick = 1;
 
@@ -120,14 +120,16 @@ void Game::updateState()
     napms(gameSpeed);
 
     /* re-generate the items after 5 seconds */
-    if (gameTick++ % 10 == 0)
+    if (gameTick++ % 100 == 0)
     {
+        gameController.removeGate(board, gate1, gate2);
         gameController.removeItem(board, goodItem);
         gameController.removeItem(board, badItem);
         gameController.removeItem(board, slowItem);
         gameController.generateItem(board, goodItem);
         gameController.generateItem(board, badItem);
         gameController.generateItem(board, slowItem);
+        gameController.generateGates(board, gate1, gate2);
         //! remove gate, generate gate. 이거 최우선 구현.
     }
 

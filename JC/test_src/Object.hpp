@@ -2,8 +2,8 @@
 
 #include <ncurses.h>
 
-#define BOARD_COLS 13
-#define BOARD_ROWS 25
+#define BOARD_COLS 25
+#define BOARD_ROWS 30
 
 #define ICON_EMPTY ' '
 #define ICON_WALL 'O'
