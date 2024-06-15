@@ -56,7 +56,7 @@ Game::Game()
     /* Init member variables */
     board = Board(BOARD_COLS, BOARD_ROWS);
     gameSpeed = 300;
-    gameLevel = 0; //! 0으로 설정하게
+    gameLevel = 1; //! 0으로 설정하게
     gameOver = false;
     gameTick = 1;
 
@@ -164,19 +164,21 @@ void Game::updateState()
         break;
     case ICON_GATE:
         //! 이거 Controller로 옮기기.
-        if (nextHead.getY() == gate1.getY() && nextHead.getX() == gate1.getX())
-        {                                                        // GATE1에 닿았을 때
-            gateHead = SnakeSegment(gate2.getY(), gate2.getX()); // GATE2를 gateHead에 저장
-        }
-        else
-        {                                                        // GATE2에 닿았을 때
-            gateHead = SnakeSegment(gate1.getY(), gate1.getX()); // GATE1을 gateHead에 저장
-        }
-        snake.addHead(gateHead); // gateHead를 snake의 head로 설정
-        board.removeObject(snake.getTail());
-        snake.removeTail();
+        // if (nextHead.getY() == gate1.getY() && nextHead.getX() == gate1.getX())
+        // {                                                        // GATE1에 닿았을 때
+        //     gateHead = SnakeSegment(gate2.getY(), gate2.getX()); // GATE2를 gateHead에 저장
+        // }
+        // else
+        // {                                                        // GATE2에 닿았을 때
+        //     gateHead = SnakeSegment(gate1.getY(), gate1.getX()); // GATE1을 gateHead에 저장
+        // }
+        // snake.addHead(gateHead); // gateHead를 snake의 head로 설정
+        // board.removeObject(snake.getTail());
+        // snake.removeTail();
 
-        GateDirection(gateHead); // GATE 방향 설정
+        // GateDirection(gateHead); // GATE 방향 설정
+        // gameController.moveSnake(board, snake);
+        gameController.passGate(board, snake, gate1, gate2);
         gameController.moveSnake(board, snake);
         break;
     default:
