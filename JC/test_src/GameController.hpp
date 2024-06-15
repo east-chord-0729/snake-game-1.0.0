@@ -137,26 +137,6 @@ void GameController::eatBadItemAndMove(Board &board, Snake &snake)
     moveSnake(board, snake);
 }
 
-// void GameController::readyToPassGate(Board &board, Snake &snake, Gate &gate1, Gate &gate2)
-// {
-//     SnakeSegment nextHead = snake.getNextHead();
-//     SnakeSegment gatehead = SnakeSegment(0, 0); // 또다른 GATE가 들어갈 변수
-
-//     if (nextHead.getY() == gate1.getY() && nextHead.getX() == gate1.getX())
-//     {                                                        // GATE1에 닿았을 때
-//         gatehead = SnakeSegment(gate2.getY(), gate2.getX()); // GATE2를 gatehead에 저장
-//     }
-//     else
-//     {                                                        // GATE2에 닿았을 때
-//         gatehead = SnakeSegment(gate1.getY(), gate1.getX()); // GATE1을 gatehead에 저장
-//     }
-//     snake.addHead(gatehead); // gatehead를 snake의 head로 설정
-//     board.removeObject(snake.getTail());
-//     snake.removeTail();
-
-//     // GateDirection(gatehead); // GATE 방향 설정
-// }
-
 void GameController::passGate(Board &board, Snake &snake, Gate &gate1, Gate &gate2)
 {
     SnakeSegment nextHead = snake.getNextHead();
