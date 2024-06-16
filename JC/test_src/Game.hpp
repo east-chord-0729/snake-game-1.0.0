@@ -32,6 +32,8 @@ class Game
     Gate gate1, gate2; // GATE 두개 추가
     int gameSpeed, gameLevel, gameTick;
     bool gameOver;
+    int snakeLength = 0;
+    int gateLength = 0;
 
     void handleInput();
     void updateState();
@@ -132,8 +134,9 @@ void Game::updateState()
         gameController.generateGates(board, gate1, gate2);
     }
 
+    gameController.checkGates(board, gate1, gate2, gateLength, snakeLength);
+
     SnakeSegment nextHead = snake.getNextHead(); //! 삭제 예정.
-    SnakeSegment gateHead = SnakeSegment(0, 0); // 또다른 GATE가 들어갈 변수 //! 삭제 예정
 
     /* check collision */
     chtype collisionIcon = board.getIcon(nextHead.getY(), nextHead.getX());
@@ -164,6 +167,7 @@ void Game::updateState()
     case ICON_GATE:
         gameController.passGate(board, snake, gate1, gate2);
         gameController.moveSnake(board, snake);
+        snakeLength = snake.getLength();
         break;
     default:
         break;

@@ -29,6 +29,7 @@ class GameController
     void eatBadItemAndMove(Board &board, Snake &snake);
     void passGate(Board &board, Snake &snake, Gate &gate1, Gate &gate2);
     void GateDirection(Board &board, Snake &snake, SnakeSegment &gateHead);
+    void checkGates(Board &board, Gate &gate1, Gate &gate2, int &gateLength, int &snakeLength);
     //! void readyToPassGate(Board &board, Snake &snake, Gate &gate1, Gate &gate2);
 };
 
@@ -199,6 +200,22 @@ void GameController::GateDirection(Board &board, Snake &snake, SnakeSegment &gat
             default:
                 break;
             }
+        }
+    }
+}
+
+void GameController::checkGates(Board &board, Gate &gate1, Gate &gate2, int &gateLength, int &snakeLength)
+{
+    if(snakeLength !=0)
+    {
+        gateLength ++;
+        if(gateLength == snakeLength)
+        {
+            board.addIcon(gate1.getY(), gate1.getX(), ICON_WALL);
+            board.addIcon(gate2.getY(), gate2.getX(), ICON_WALL);
+            generateGates(board, gate1, gate2);
+            gateLength = 0;
+            snakeLength = 0;
         }
     }
 }
