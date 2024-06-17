@@ -88,7 +88,9 @@ void GameController::generateSnake(Board &board, Snake &snake)
     addObjectToBoard(board, snake.getHead());
 
     snake.addHead(snake.getNextHead());
-    addObjectToBoard(board, snake.getHead());
+    SnakeSegment head = snake.getHead();
+    head.setIcon(ICON_SNAKE_HEAD);
+    addObjectToBoard(board, head);
 }
 
 template <typename ItemType> void GameController::removeItem(Board &board, ItemType &item)
@@ -106,10 +108,14 @@ void GameController::removeGate(Board &board, Gate &gate1, Gate &gate2)
 void GameController::moveSnake(Board &board, Snake &snake)
 {
     SnakeSegment nextHead = snake.getNextHead(); /* 다음 머리 */
+    SnakeSegment privHead = snake.getHead();     /* 현재 머리 */
     SnakeSegment removeTail = snake.getTail();   /* 사라질 꼬리 */
 
     /* 다음 머리 추가 */
     snake.addHead(nextHead);
+    nextHead.setIcon(ICON_SNAKE_HEAD);
+    privHead.setIcon(ICON_SNAKE);
+    addObjectToBoard(board, privHead);
     addObjectToBoard(board, nextHead);
 
     /* 꼬리 삭제 */
@@ -119,9 +125,13 @@ void GameController::moveSnake(Board &board, Snake &snake)
 
 void GameController::eatGoodItemAndMove(Board &board, Snake &snake)
 {
-    /* 다음 머리 추가 */
     SnakeSegment nextHead = snake.getNextHead();
+    SnakeSegment privHead = snake.getHead();
+
     snake.addHead(nextHead);
+    nextHead.setIcon(ICON_SNAKE_HEAD);
+    privHead.setIcon(ICON_SNAKE);
+    addObjectToBoard(board, privHead);
     addObjectToBoard(board, nextHead);
 }
 

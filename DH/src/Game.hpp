@@ -200,7 +200,7 @@ void Game::updateState()
     }
 
     /* mission completes */
-    if (snake.getLength() >= 5)
+    if (snake.getLength() == 5 && countGate == 1 && countSlowItem == 1 && countGoodItem == 3 && countBadItem == 1)
     {
         gameOver = true;
         nextLevel = true;

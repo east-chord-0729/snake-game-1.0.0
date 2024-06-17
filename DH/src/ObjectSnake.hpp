@@ -38,22 +38,12 @@ class Snake
 
 Snake::Snake(int x, int y, Direction d)
 {
-    SnakeSegment head = SnakeSegment(x, y);
-    head.setIcon(ICON_SNAKE_HEAD);
-    addHead(head);
-
+    addHead(SnakeSegment(x, y));
     setDirection(d);
 }
 
 void Snake::addHead(SnakeSegment segment)
 {
-    if (getLength() != 0)
-    {
-        getHead().setIcon(ICON_SNAKE);
-    }
-
-    segment.setIcon(ICON_SNAKE_HEAD);
-
     this->segments.push_front(segment);
 }
 
@@ -65,7 +55,6 @@ void Snake::addTail(SnakeSegment segment)
 void Snake::removeHead()
 {
     this->segments.pop_front();
-    getHead().setIcon(ICON_SNAKE_HEAD);
 }
 
 void Snake::removeTail()

@@ -25,7 +25,7 @@ class BoardScore
     void init()
     {
         mvwprintw(win, 1, 1, " ____SCORE BOARD____ "); /* 점수판 표기 */
-        mvwprintw(win, 3, 2, "L: 0 / 20");             /* 점수판 표기 */
+        mvwprintw(win, 3, 2, "L: 0 / 5");              /* 점수판 표기 */
         mvwprintw(win, 4, 2, "+: 0");                  /* 점수판 표기 */
         mvwprintw(win, 5, 2, "-: 0");                  /* 점수판 표기 */
         mvwprintw(win, 6, 2, "S: 0");                  /* 점수판 표기 */

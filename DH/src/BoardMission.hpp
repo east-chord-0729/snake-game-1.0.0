@@ -22,9 +22,9 @@ class BoardMission
     void init()
     {
         mvwprintw(win, 1, 1, " ______MISSION______ "); /* 점수판 표기 */
-        mvwprintw(win, 3, 2, "L: 10 [ ]");             /* 점수판 표기 */
-        mvwprintw(win, 4, 2, "+: 5  [ ]");             /* 점수판 표기 */
-        mvwprintw(win, 5, 2, "-: 2  [ ]");             /* 점수판 표기 */
+        mvwprintw(win, 3, 2, "L: 5  [ ]");             /* 점수판 표기 */
+        mvwprintw(win, 4, 2, "+: 3  [ ]");             /* 점수판 표기 */
+        mvwprintw(win, 5, 2, "-: 1  [ ]");             /* 점수판 표기 */
         mvwprintw(win, 6, 2, "S: 1  [ ]");             /* 점수판 표기 */
         mvwprintw(win, 7, 2, "$: 1  [ ]");             /* 점수판 표기 */
     }
@@ -39,19 +39,19 @@ class BoardMission
         switch (code)
         {
         case 0:
-            if (count == 10)
-            {
-                mvwprintw(win, 3 + code, 9, "v"); /* 점수판 표기 */
-            }
-            break;
-        case 1:
             if (count == 5)
             {
                 mvwprintw(win, 3 + code, 9, "v"); /* 점수판 표기 */
             }
             break;
+        case 1:
+            if (count == 3)
+            {
+                mvwprintw(win, 3 + code, 9, "v"); /* 점수판 표기 */
+            }
+            break;
         case 2:
-            if (count == 2)
+            if (count == 1)
             {
                 mvwprintw(win, 3 + code, 9, "v"); /* 점수판 표기 */
             }
