@@ -60,7 +60,7 @@ Game::Game(int level)
     boardMission = BoardMission(BOARD_COLS, BOARD_ROWS);
 
     /* Init values */
-    gameSpeed = 500;
+    gameSpeed = 250;
     gameOver = false;
     gameTick = 1;
     countGoodItem = 0;
@@ -141,7 +141,7 @@ void Game::updateState()
     mvprintw(0, 0, "Elapsed Time: %.f seconds", elapsed_seconds.count());
 
     /* re-generate the items after 5 seconds */
-    if (gameTick++ % 50 == 0)
+    if (gameTick++ % 25 == 0)
     {
         gameController.removeGate(board, gate1, gate2);
         gameController.removeItem(board, goodItem);
@@ -211,7 +211,7 @@ void Game::updateState()
     }
 
     /* mission completes */
-    if (snake.getLength() == 5 && countGate == 1 && countSlowItem == 1 && countGoodItem == 3 && countBadItem == 1)
+    if (snake.getLength() >= 5 && countGate >= 1 && countSlowItem >= 1 && countGoodItem >= 3 && countBadItem >= 1)
     {
         gameOver = true;
         nextLevel = true;
