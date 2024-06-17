@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Board.hpp"
+#include "BoardMission.hpp"
+#include "BoardScore.hpp"
 #include "GameController.hpp"
 #include "ObjectGate.hpp"
 #include "ObjectItems.hpp"
 #include "ObjectSnake.hpp"
 #include "ObjectWalls.hpp"
-#include "BoardScore.hpp"
-#include "BoardMission.hpp"
 #include <chrono>
 #include <iostream>
 
@@ -16,9 +16,9 @@ using namespace std;
 class Game
 {
   public:
-    Game();
+    Game(int level = 0);
     ~Game();
-    void run();
+    bool run();
 
   private:
     GameController gameController;
@@ -30,20 +30,15 @@ class Game
     BadItem badItem;
     SlowItem slowItem;
     Gate gate1, gate2; // GATE 두개 추가
-    int gameSpeed, gameLevel, gameTick;
-    bool gameOver;
-    int snakeLength = 0;
-    int gateLength = 0;
+    int countGoodItem, countBadItem, countSlowItem, countGate, gateLength, snakeLength, gameSpeed, gameTick;
+    bool gameOver, nextLevel;
 
     void handleInput();
     void updateState();
     void render();
-    void displayGameStart();
-    void displayGameOver();
-    void GateDirection(SnakeSegment gateHead); // GATE 방향 설정 //! 삭제 예정.
 };
 
-Game::Game()
+Game::Game(int level)
 {
     /* Init ncurses and srand */
     initscr();             /* Start ncurses */
@@ -57,18 +52,35 @@ Game::Game()
 
     /* Init member variables */
     board = Board(BOARD_COLS, BOARD_ROWS);
-    gameSpeed = 300;
-    gameLevel = 1; //! 0으로 설정하게
+    boardScore = BoardScore(BOARD_COLS, BOARD_ROWS);
+    boardMission = BoardMission(BOARD_COLS, BOARD_ROWS);
+
+    /* Init values */
+    gameSpeed = 500;
     gameOver = false;
     gameTick = 1;
+    countGoodItem = 0;
+    countSlowItem = 0;
+    countBadItem = 0;
+    countGate = 0;
+    snakeLength = 0;
+    gateLength = 0;
+    nextLevel = false;
 
     /* Generate objects */
-    gameController.generateWalls(board, gameLevel);
+    gameController.generateWalls(board, level);
     gameController.generateGates(board, gate1, gate2);
     gameController.generateSnake(board, snake);
     gameController.generateItem(board, goodItem);
     gameController.generateItem(board, badItem);
     gameController.generateItem(board, slowItem);
+
+    /* Init scores */
+    boardScore.updateScore(snake.getLength(), 0);
+    boardScore.updateScore(countGoodItem, 1);
+    boardScore.updateScore(countBadItem, 2);
+    boardScore.updateScore(countSlowItem, 3);
+    boardScore.updateScore(countGate, 4);
 }
 
 Game::~Game()
@@ -76,12 +88,8 @@ Game::~Game()
     endwin();
 }
 
-void Game::run()
+bool Game::run()
 {
-    displayGameStart();
-
-    // TODO: 키 입력 받기.
-
     while (!gameOver)
     {
         handleInput();
@@ -89,7 +97,7 @@ void Game::run()
         render();
     }
 
-    displayGameOver();
+    return nextLevel;
 }
 
 void Game::handleInput()
@@ -122,7 +130,7 @@ void Game::updateState()
     napms(gameSpeed);
 
     /* re-generate the items after 5 seconds */
-    if (gameTick++ % 100 == 0)
+    if (gameTick++ % 50 == 0)
     {
         gameController.removeGate(board, gate1, gate2);
         gameController.removeItem(board, goodItem);
@@ -136,10 +144,10 @@ void Game::updateState()
 
     gameController.checkGates(board, gate1, gate2, gateLength, snakeLength);
 
-    SnakeSegment nextHead = snake.getNextHead(); //! 삭제 예정.
+    SnakeSegment nextHead = snake.getNextHead();
+    chtype collisionIcon = board.getIcon(nextHead.getY(), nextHead.getX());
 
     /* check collision */
-    chtype collisionIcon = board.getIcon(nextHead.getY(), nextHead.getX());
     switch (collisionIcon)
     {
     case ICON_EMPTY:
@@ -147,13 +155,23 @@ void Game::updateState()
         break;
     case ICON_ITEM_GOOD:
         gameController.eatGoodItemAndMove(board, snake);
+        boardScore.updateScore(++countGoodItem, 1);
+        boardScore.updateScore(snake.getLength(), 0);
+        boardMission.updateMisson(countGoodItem, 1);
+        boardMission.updateMisson(snake.getLength(), 0);
         break;
     case ICON_ITEM_BAD:
         gameController.eatBadItemAndMove(board, snake);
+        boardScore.updateScore(++countBadItem, 2);
+        boardScore.updateScore(snake.getLength(), 0);
+        boardMission.updateMisson(countBadItem, 2);
+        boardMission.updateMisson(snake.getLength(), 0);
         break;
     case ICON_ITEM_SLOW:
         gameSpeed -= 50;
         gameController.moveSnake(board, snake);
+        boardScore.updateScore(++countSlowItem, 3);
+        boardMission.updateMisson(countSlowItem, 3);
         break;
     case ICON_SNAKE:
         gameOver = true;
@@ -168,6 +186,8 @@ void Game::updateState()
         gameController.passGate(board, snake, gate1, gate2);
         gameController.moveSnake(board, snake);
         snakeLength = snake.getLength();
+        boardScore.updateScore(++countGate, 4);
+        boardMission.updateMisson(countGate, 4);
         break;
     default:
         break;
@@ -178,27 +198,18 @@ void Game::updateState()
     {
         gameOver = true;
     }
+
+    /* mission completes */
+    if (snake.getLength() >= 5)
+    {
+        gameOver = true;
+        nextLevel = true;
+    }
 }
 
 void Game::render()
 {
     board.render();
-}
-
-void Game::displayGameStart()
-{
-    ; // TODO: 'Enter 누르면 게임 시작, 다른 키 누르면 종료' 라는 알림
-}
-
-void Game::displayGameOver()
-{
-    //! 화면 싹 지우고 중심에 글 뜨게 하기
-    //! 잠시후에 사라지지 말고, 버튼을 눌러야 사라지기.
-    if (gameOver)
-    {
-        mvprintw(0, 0, "Game Over! press any key to exit");
-        mvprintw(1, 0, "Your snake length: %d", snake.getLength());
-        refresh();
-        napms(2000);
-    }
+    boardScore.render();
+    boardMission.render();
 }

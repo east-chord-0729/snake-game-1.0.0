@@ -2,17 +2,14 @@
 
 #include <ncurses.h>
 
-#define BOARD_COLS 25
-#define BOARD_ROWS 30
-
 #define ICON_EMPTY ' '
 #define ICON_WALL 'O'
 #define ICON_IWALL 'I'
 #define ICON_SNAKE '#'
 #define ICON_SNAKE_HEAD '@'
-#define ICON_ITEM_GOOD 'G'
-#define ICON_ITEM_BAD 'B'
-#define ICON_ITEM_SLOW 'S'
+#define ICON_ITEM_GOOD '+'
+#define ICON_ITEM_BAD '-'
+#define ICON_ITEM_SLOW '*'
 #define ICON_GATE '$'
 
 enum Direction

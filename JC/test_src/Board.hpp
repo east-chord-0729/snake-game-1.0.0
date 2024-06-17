@@ -8,6 +8,7 @@
 
 #define BOARD_COLS 25
 #define BOARD_ROWS 30
+
 class Board
 {
   public:
