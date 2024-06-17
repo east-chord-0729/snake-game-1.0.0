@@ -11,7 +11,10 @@
 #include <chrono>
 #include <iostream>
 
+using namespace std::chrono;
 using namespace std;
+
+steady_clock::time_point start_time;
 
 class Game
 {
@@ -31,6 +34,7 @@ class Game
     SlowItem slowItem;
     Gate gate1, gate2; // GATE 두개 추가
     int countGoodItem, countBadItem, countSlowItem, countGate, gateLength, snakeLength, gameSpeed, gameTick;
+    double timer;
     bool gameOver, nextLevel;
 
     void handleInput();
@@ -90,6 +94,8 @@ Game::~Game()
 
 bool Game::run()
 {
+    start_time = steady_clock::now();
+
     while (!gameOver)
     {
         handleInput();
@@ -128,6 +134,11 @@ void Game::updateState()
 {
     /* freeze the game temporarily to controll game speed */
     napms(gameSpeed);
+
+    /* timer */
+    steady_clock::time_point current_time = steady_clock::now();
+    duration<double> elapsed_seconds = duration_cast<duration<double>>(current_time - start_time);
+    mvprintw(0, 0, "Elapsed Time: %.f seconds", elapsed_seconds.count());
 
     /* re-generate the items after 5 seconds */
     if (gameTick++ % 50 == 0)
