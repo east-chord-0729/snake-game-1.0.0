@@ -159,8 +159,8 @@ void GameController::passGate(Board &board, Snake &snake, Gate &gate1, Gate &gat
 
 void GameController::GateDirection(Board &board, Snake &snake, SnakeSegment &gateHead)
 {
-    SnakeSegment testnextHead = snake.getNextHead(); // 원래 방향으로 이동했을 때의 위치
-    Object testcollisionObject = board.getObject(testnextHead.getX(), testnextHead.getY());
+    SnakeSegment nextHead = snake.getNextHead(); // 원래 방향으로 이동했을 때의 위치
+    Object collisionObject = board.getObject(nextHead.getX(), nextHead.getY());
 
     if (gateHead.getY() == 0)
     {                             // GATE가 맵의 상단에 있을떄
@@ -181,7 +181,7 @@ void GameController::GateDirection(Board &board, Snake &snake, SnakeSegment &gat
     else
     { // GATE가 맵의 가장자리에 있지 않을때
         // 원래의 방향으로 갔을 떄 벽이 있을때만 방향을 바꿈
-        if (testcollisionObject.getIcon() == ICON_WALL)
+        if (collisionObject.getIcon() == ICON_WALL)
         { // 원래 방향으로 이동했을때 벽이 있을때
             switch (snake.getDirection())
             {
