@@ -6,15 +6,11 @@ int main()
     {
         Game game(i);
 
-        //! display
-
         if (game.run() == false)
         {
             break;
         }
     }
-
-    //! display
 
     return 0;
 }

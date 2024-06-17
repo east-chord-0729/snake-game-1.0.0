@@ -33,8 +33,8 @@ class Game
     BadItem badItem;
     SlowItem slowItem;
     Gate gate1, gate2; // GATE 두개 추가
-    int countGoodItem, countBadItem, countSlowItem, countGate, gateLength, snakeLength, gameSpeed, gameTick;
-    double timer;
+    int countGoodItem, countBadItem, countSlowItem, countGate;
+    int gateLength, snakeLength, gameSpeed, gameTick;
     bool gameOver, nextLevel;
 
     void handleInput();

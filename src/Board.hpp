@@ -19,7 +19,6 @@ class Board
     void getRandomEmptyCoordinate(int *y, int *x);
     void getRandomWallCoordinate(int *y, int *x);
 
-    //! 삭제 예정
     void addObject(Object obj);
     void removeObject(Object obj);
     Object getObject(int x, int y);
@@ -83,26 +82,22 @@ void Board::getRandomWallCoordinate(int *y, int *x)
     } while (getIcon(*y, *x) != ICON_WALL);
 }
 
-//! 삭제 예정
 void Board::addObject(Object obj)
 {
     mvwaddch(boardWin, obj.getY(), obj.getX(), obj.getIcon());
 }
 
-//! 삭제 예정
 void Board::removeObject(Object obj)
 {
     mvwaddch(boardWin, obj.getY(), obj.getX(), ICON_EMPTY);
 }
 
-//! 삭제 예정
 Object Board::getObject(int x, int y)
 {
     chtype icon = mvwinch(boardWin, y, x);
     return Object(y, x, icon);
 }
 
-//! 삭제 예정
 Object Board::getObjectRand(chtype icon)
 {
     int x, y;
