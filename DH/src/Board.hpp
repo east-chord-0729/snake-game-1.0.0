@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define BOARD_COLS 13
-#define BOARD_ROWS 25
+#define BOARD_COLS 25
+#define BOARD_ROWS 30
 
 class Board
 {
